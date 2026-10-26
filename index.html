@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LensCraft Rental - Asisten & Sewa Alat UMKM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header / Navbar -->
+  <header class="navbar">
+    <div class="logo">
+      📷 <h1>LensCraft Rental UMKM</h1>
+    </div>
+    <span class="badge">Praktikum PAW - Tugas DOM & Fetch API</span>
+  </header>
+
+  <main class="container">
+    
+    <!-- BAGIAN 1: FETCH API PRODUK -->
+    <section class="card">
+      <div class="card-header">
+        <h2>1. Katalog Produk (Fetch API)</h2>
+        <button id="btnLoadProducts" class="btn-secondary" type="button">🔄 Ambil Data Produk</button>
+      </div>
+      <p class="section-desc">Mengambil data produk secara dinamis dari endpoint eksternal menggunakan JavaScript Fetch API.</p>
+      
+      <!-- Status Loading / Error -->
+      <div id="apiStatus" class="status-box info" hidden>Silakan klik tombol di atas untuk memuat data produk.</div>
+
+      <!-- Container Grid untuk menampilkan produk hasil Fetch -->
+      <div id="productGrid" class="product-grid">
+        <!-- Kartu produk akan dimasukkan secara dinamis lewat JavaScript -->
+      </div>
+    </section>
+
+
+    <!-- BAGIAN 2: FORM, DOM & EVENT HANDLING -->
+    <section class="card">
+      <div class="card-header">
+        <h2>2. Form Pemesanan Sewa (DOM & Event Handling)</h2>
+      </div>
+      <p class="section-desc">Form interaktif dengan validasi input, event listener, dan manipulasi DOM untuk menampilkan ringkasan sewa.</p>
+
+      <form id="rentalForm" novalidate>
+        <div class="form-group">
+          <label for="namaPemesan">Nama Lengkap <span class="required">*</span></label>
+          <input type="text" id="namaPemesan" placeholder="Contoh: Budi Santoso">
+          <span class="error-text" id="errorNama"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="pilihanAlat">Pilih Kamera / Lensa <span class="required">*</span></label>
+          <select id="pilihanAlat">
+            <option value="">-- Pilih Alat yang Tersedia --</option>
+            <option value="Sony Alpha a6400 (Rp 150.000 / hari)">Sony Alpha a6400 - Rp 150.000 / hari</option>
+            <option value="Fujifilm X-T30 II (Rp 175.000 / hari)">Fujifilm X-T30 II - Rp 175.000 / hari</option>
+            <option value="Lensa Sigma 30mm f/1.4 (Rp 75.000 / hari)">Lensa Sigma 30mm f/1.4 - Rp 75.000 / hari</option>
+            <option value="Canon EOS 80D (Rp 130.000 / hari)">Canon EOS 80D - Rp 130.000 / hari</option>
+          </select>
+          <span class="error-text" id="errorAlat"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="durasiSewa">Durasi Sewa (Hari) <span class="required">*</span></label>
+          <input type="number" id="durasiSewa" min="1" placeholder="Masukkan jumlah hari">
+          <span class="error-text" id="errorDurasi"></span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">✨ Proses Pesanan Sewa</button>
+          <button type="button" id="btnReset" class="btn-outline">Reset Form</button>
+        </div>
+      </form>
+
+      <!-- Hasil Output Dinamis Form -->
+      <div id="outputContainer" class="output-box" hidden>
+        <h3>📋 Ringkasan Reservasi Berhasil</h3>
+        <p id="outputDetail"></p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 LensCraft Rental — Dikembangkan untuk Tugas Pemrograman Web</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
