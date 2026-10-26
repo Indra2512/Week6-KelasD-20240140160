@@ -1,131 +1,122 @@
 // ==========================================
-// 1. FITUR FETCH API (Mengambil Data Produk)
+// 1. BAGIAN FORM: DOM SELECTOR & EVENT HANDLING
 // ==========================================
-const btnLoadProducts = document.querySelector('#btnLoadProducts');
-const productGrid = document.querySelector('#productGrid');
-const apiStatus = document.querySelector('#apiStatus');
-
-async function fetchProductsData() {
-  // Tampilkan status loading
-  apiStatus.hidden = false;
-  apiStatus.className = 'status-box loading';
-  apiStatus.textContent = 'Memuat data produk dari server...';
-  productGrid.innerHTML = '';
-
-  try {
-    // Menggunakan endpoint dari instruksi tugas: https://dummyjson.com/products
-    const response = await fetch('https://dummyjson.com/products?limit=4');
-
-    if (!response.ok) {
-      throw new Error(`Gagal mengambil data! HTTP Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const products = data.products;
-
-    // Sembunyikan status loading jika berhasil
-    apiStatus.hidden = true;
-
-    // Render data produk ke DOM (Minimal menampilkan nama dan harga produk sesuai instruksi)
-    products.forEach(item => {
-      const productCard = document.createElement('div');
-      productCard.className = 'product-item';
-      
-      // Konversi harga USD ke format Rupiah simulasi agar sesuai tema UMKM
-      const hargaRupiah = `Rp ${(item.price * 15000).toLocaleString('id-ID')}`;
-
-      productCard.innerHTML = `
-        <div>
-          <h4>${item.title}</h4>
-          <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem;">Kategori: ${item.category}</p>
-        </div>
-        <div class="product-price">${hargaRupiah}</div>
-      `;
-
-      productGrid.appendChild(productCard);
-    });
-
-  } catch (error) {
-    console.error('Fetch Error:', error);
-    apiStatus.hidden = false;
-    apiStatus.className = 'status-box error';
-    apiStatus.textContent = 'Gagal memuat data produk. Periksa koneksi internet Anda.';
-  }
-}
-
-// Event listener untuk tombol Fetch API
-btnLoadProducts.addEventListener('click', fetchProductsData);
-
-
-// ==========================================
-// 2. FORM INTERAKTIF, DOM & EVENT HANDLING
-// ==========================================
-const rentalForm = document.querySelector('#rentalForm');
-const namaPemesan = document.querySelector('#namaPemesan');
-const pilihanAlat = document.querySelector('#pilihanAlat');
-const durasiSewa = document.querySelector('#durasiSewa');
+const form = document.querySelector('#captionForm');
+const namaProduk = document.querySelector('#namaProduk');
+const keunggulan = document.querySelector('#keunggulan');
+const platform = document.querySelector('#platform');
 
 const errorNama = document.querySelector('#errorNama');
-const errorAlat = document.querySelector('#errorAlat');
-const errorDurasi = document.querySelector('#errorDurasi');
+const errorKeunggulan = document.querySelector('#errorKeunggulan');
 
 const outputContainer = document.querySelector('#outputContainer');
-const outputDetail = document.querySelector('#outputDetail');
+const captionOutput = document.querySelector('#captionOutput');
+const badgePlatform = document.querySelector('#badgePlatform');
 const btnReset = document.querySelector('#btnReset');
 
-// Fungsi Validasi Input Sederhana
+// Fungsi Validasi Sederhana
 function validateForm() {
-  let isValid = true;
-
-  // Reset pesan error
+  let valid = true;
   errorNama.textContent = '';
-  errorAlat.textContent = '';
-  errorDurasi.textContent = '';
+  errorKeunggulan.textContent = '';
 
-  // Validasi Nama (Minimal 3 karakter)
-  if (namaPemesan.value.trim().length < 3) {
-    errorNama.textContent = 'Nama pemesan minimal harus 3 karakter.';
-    isValid = false;
+  // Validasi Nama Produk (Minimal 3 Karakter)
+  if (namaProduk.value.trim().length < 3) {
+    errorNama.textContent = 'Nama produk minimal 3 karakter.';
+    valid = false;
   }
 
-  // Validasi Pilihan Alat (Tidak boleh kosong)
-  if (pilihanAlat.value === '') {
-    errorAlat.textContent = 'Silakan pilih salah satu kamera atau lensa.';
-    isValid = false;
+  // Validasi Keunggulan (Minimal 10 Karakter)
+  if (keunggulan.value.trim().length < 10) {
+    errorKeunggulan.textContent = 'Keunggulan minimal 10 karakter.';
+    valid = false;
   }
 
-  // Validasi Durasi (Minimal 1 hari)
-  if (durasiSewa.value === '' || Number(durasiSewa.value) < 1) {
-    errorDurasi.textContent = 'Durasi sewa minimal 1 hari.';
-    isValid = false;
-  }
-
-  return isValid;
+  return valid;
 }
 
-// Event listener saat form disubmit
-rentalForm.addEventListener('submit', function(e) {
-  e.preventDefault(); // Mencegah halaman mereload otomatis
+// Event Listener saat form disubmit
+form.addEventListener('submit', function(e) {
+  e.preventDefault(); // Mencegah reload halaman
 
   if (validateForm()) {
-    // Ambil nilai dari input form
-    const nama = namaPemesan.value.trim();
-    const alat = pilihanAlat.value;
-    const durasi = durasiSewa.value;
+    const nama = namaProduk.value.trim();
+    const detail = keunggulan.value.trim();
+    const plat = platform.value;
 
-    // Tampilkan hasil secara dinamis ke DOM
-    outputDetail.textContent = `Terima kasih, ${nama}! Pesanan sewa alat "${alat}" untuk durasi ${durasi} hari berhasil dicatat dan sedang diproses.`;
+    // Generate teks caption dinamis
+    let generatedText = `✨ Promo Spesial ${nama}! ✨\n\n${detail}\n\nYuk order sekarang juga sebelum kehabisan! Hubungi kami untuk pemesanan ya. 👇\n\n#UMKM #${nama.replace(/\s+/g, '')} #ProdukLokal`;
+
+    // Tampilkan ke DOM
+    captionOutput.textContent = generatedText;
+    badgePlatform.textContent = plat;
     outputContainer.hidden = false;
   } else {
     outputContainer.hidden = true;
   }
 });
 
-// Event listener tombol reset form
+// Event Listener tombol Reset
 btnReset.addEventListener('click', function() {
-  rentalForm.reset();
+  form.reset();
   errorNama.textContent = '';
-  errorAlat.textContent = '';
-  errorDurasi.textContent = '';
+  errorKeunggulan.textContent = '';
   outputContainer.hidden = true;
 });
+
+
+// ==========================================
+// 2. BAGIAN FETCH API: MENGAMBIL DATA PRODUK
+// ==========================================
+const btnFetch = document.querySelector('#btnFetch');
+const productContainer = document.querySelector('#productContainer');
+const apiStatus = document.querySelector('#apiStatus');
+
+async function loadProductsFromAPI() {
+  // Tampilkan status loading
+  apiStatus.hidden = false;
+  apiStatus.className = 'status-box loading';
+  apiStatus.textContent = 'Mengambil data dari https://dummyjson.com/products...';
+  productContainer.innerHTML = '';
+
+  try {
+    // Memanggil Fetch API ke endpoint tugas
+    const response = await fetch('https://dummyjson.com/products?limit=5');
+
+    if (!response.ok) {
+      throw new Error(`Gagal mengambil data! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const products = data.products;
+
+    // Sembunyikan status loading
+    apiStatus.hidden = true;
+
+    // Menampilkan data produk ke DOM (Lengkap dengan gambar, nama, dan harga)
+    products.forEach(item => {
+      const itemEl = document.createElement('div');
+      itemEl.className = 'product-card-item';
+
+      itemEl.innerHTML = `
+        <img src="${item.thumbnail}" alt="${item.title}" class="product-img">
+        <div class="product-info">
+          <h4>${item.title}</h4>
+          <p>Kategori: ${item.category}</p>
+        </div>
+        <div class="product-price">$ ${item.price}</div>
+      `;
+
+      productContainer.appendChild(itemEl);
+    });
+
+  } catch (error) {
+    console.error('Fetch Error:', error);
+    apiStatus.hidden = false;
+    apiStatus.className = 'status-box error';
+    apiStatus.textContent = 'Gagal mengambil data dari API. Periksa koneksi internet Anda.';
+  }
+}
+
+// Event Listener untuk tombol Fetch API
+btnFetch.addEventListener('click', loadProductsFromAPI);
